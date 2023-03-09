@@ -65,7 +65,6 @@ export class GameBo {
 
 
   getFormattedDate() : string{
-    const formattedDate = this.publishedDate.toDateString()
-    return formattedDate
+    return this.publishedDate.toLocaleDateString('en-US');
   }
 }

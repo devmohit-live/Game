@@ -1,7 +1,9 @@
 import {Injectable} from '@nestjs/common';
 import {Game} from '../entities/game.entity';
-import {GameResponseDto} from '../dtos/game.dto';
+import {GameRequestDto, GameResponseDto} from '../dtos/game.dto';
 import {GameMapper} from '../mappers/game.mapper';
+import {GameBo} from "../bos/game.bo";
+import {generateGameId} from "../utils/game-id.util";
 
 @Injectable()
 export class GameService {
@@ -18,7 +20,21 @@ export class GameService {
   }
 
   async getGame(id : string) : Promise<GameResponseDto> {
-
     return this.gameMapper.mapGameBoToGameResponseDto(this.gameMapper.mapGameToGameBo(this.game1));
   }
+
+  async addGame(game: GameRequestDto) {
+    const gameBo = new GameBo(generateGameId());
+    this.gameMapper.mapGameRequestDtoToGameBo(game, gameBo);
+    //TODO : to move this code to repository
+    const gameEntity : Game = this.gameMapper.mapGameRequestBoToGame(gameBo);
+    // gameEntity.name = 'Some Name';
+    // gameEntity.author = 'Some Author';
+    // gameEntity.url = 'Some URL';
+    // gameEntity.publishedDate = new Date();
+    // gameEntity.createdAt = new Date();
+    // gameEntity.modifiedAt = gameEntity.createdAt;
+    this.games.push(gameEntity);
+  }
+
 }
