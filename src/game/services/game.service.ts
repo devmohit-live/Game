@@ -39,4 +39,11 @@ export class GameService {
     this.games.push(gameEntity);
   }
 
+  async deleteGameById(id: string): Promise<void> {
+    return Promise.resolve(undefined);
+  }
+
+  async updateGame(id: string, gameRequestDto: GameRequestDto) : Promise<void>{
+    return Promise.resolve(undefined);
+  }
 }
