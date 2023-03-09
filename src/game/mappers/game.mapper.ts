@@ -11,7 +11,7 @@ export class GameMapper {
     }
 
     mapGameToGameBo(game: Game): GameBo {
-        const gameBo = new GameBo(game.id);
+        const gameBo = new GameBo(game._id);
         gameBo.author = game.author;
         gameBo.name = game.name;
         gameBo.url = game.url;
@@ -41,7 +41,7 @@ export class GameMapper {
 
     mapGameRequestBoToGame(gameBo: GameBo): Game {
         return {
-            id: gameBo.id,
+            _id: gameBo.id,
             name: gameBo.name,
             author: gameBo.author,
             url: gameBo.url,
