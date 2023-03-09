@@ -9,15 +9,15 @@ import {GameRepository} from "../repository/game.repository";
 @Injectable()
 export class GameService {
 
-  constructor(private gamesRepository : GameRepository,private gameMapper : GameMapper) {}
+  constructor(private gameMapper : GameMapper) {}
 
   private game1  : Game = { author: 'B', createdAt: new Date() , _id: 'id1', modifiedAt: new Date(), name: 'Game1', publishedDate: new Date(), url: 'someURL'};
   private game2  : Game = { author: 'A', createdAt: new Date() , _id: 'id2', modifiedAt: new Date(), name: 'Game2', publishedDate: new Date(), url: 'someURL'};
   private games : Game[] = [this.game1, this.game2];
 
   async getAllGames() : Promise<GameResponseDto[]> {
-    // const games : Game[] =  this.games;
-    const games : Game[] = await this.gamesRepository.getAllGames();
+    const games : Game[] =  this.games;
+    // const games : Game[] = await this.gamesRepository.getAllGames();
     return this.gameMapper.mapGameBosToGameResponseDtos(this.gameMapper.mapGamesToGameBos(this.games));
   }
 
