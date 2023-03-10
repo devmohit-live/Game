@@ -9,7 +9,6 @@ import {CommonsModule} from "../common/commons.module";
     imports: [
         ConfigModule.forRoot({
             isGlobal: true,
-            envFilePath: [".dev.env", ".prod.env"]
         }),
         CommonsModule,
         GameModule

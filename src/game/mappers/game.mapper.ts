@@ -2,6 +2,7 @@ import {GameRequestDto, GameResponseDto} from '../dtos/game.dto';
 import {Game} from '../entities/game.entity';
 import {GameBo} from '../bos/game.bo';
 import {Injectable} from '@nestjs/common';
+import {GameTestDto} from "../dtos/game-test.dto";
 
 @Injectable()
 export class GameMapper {
@@ -18,6 +19,7 @@ export class GameMapper {
         gameBo.publishedDate = game.publishedDate;
         gameBo.createdAt = game.createdAt;
         gameBo.modifiedAt = game.modifiedAt;
+        gameBo.isActive = game.isActive;
         return gameBo;
     }
 
@@ -36,6 +38,7 @@ export class GameMapper {
         gameBo.author = gameRequestDto.author;
         gameBo.url = gameRequestDto.url;
         gameBo.publishedDate = gameRequestDto.publishedDate;
+        gameBo.isActive = true;
         return gameBo;
     }
 
@@ -48,6 +51,35 @@ export class GameMapper {
             publishedDate: gameBo.publishedDate,
             createdAt: gameBo.createdAt,
             modifiedAt: gameBo.modifiedAt,
+            isActive: gameBo.isActive
+        }
+    }
+
+
+    mapGameBoToGame(gameBo: GameBo): Game {
+        return {
+            _id: gameBo.id,
+            name: gameBo.name,
+            author: gameBo.author,
+            url: gameBo.url,
+            publishedDate: gameBo.publishedDate,
+            createdAt: gameBo.createdAt,
+            modifiedAt: gameBo.modifiedAt,
+            isActive: gameBo.isActive
+        }
+    }
+
+    mapGameBosToGameTestDtos(gameBos: GameBo[]): GameTestDto[] {
+        return gameBos.map((gameBo) => this.mapGameBotoGameTestDto(gameBo));
+    }
+
+    mapGameBotoGameTestDto(gameBo: GameBo): GameTestDto {
+        return {
+            id: gameBo.id,
+            name: gameBo.name,
+            author: gameBo.author,
+            publishedDate: gameBo.getFormattedDate(),
+            url: gameBo.url
         }
     }
 }

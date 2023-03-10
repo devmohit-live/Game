@@ -1,5 +1,6 @@
-import {nanoid} from "nanoid";
+import {customAlphabet} from "nanoid";
 
+const CUSTOM_ID_SET = 'ABCDEFGHIJKLMNOPQRTUVWXYZ123456789';
 export const generateGameId = () => {
-    return nanoid(14).toString();
+    return `GM${customAlphabet(CUSTOM_ID_SET, 10)()}`;
 };

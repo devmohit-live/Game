@@ -12,7 +12,6 @@ export class Config {
     }
 
     public static async init() {
-        console.log('Inside Init')
         if (this._config) {
             return;
         }

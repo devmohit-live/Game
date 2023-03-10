@@ -1,4 +1,15 @@
-import {Body, Controller, Delete, Get, Param, Post, Put} from '@nestjs/common';
+import {
+    BadRequestException,
+    Body,
+    Controller,
+    Delete,
+    Get,
+    HttpCode,
+    NotFoundException,
+    Param,
+    Post,
+    Put
+} from '@nestjs/common';
 import {GameService} from '../services/game.service';
 import {GameRequestDto, GameResponseDto} from '../dtos/game.dto';
 import {
@@ -6,10 +17,12 @@ import {
     ApiBody,
     ApiCreatedResponse,
     ApiNoContentResponse,
+    ApiNotFoundResponse,
     ApiOkResponse,
     ApiOperation,
     ApiTags
 } from "@nestjs/swagger";
+import {BAD_REQUEST_GENERIC_EXCEPTION, NOT_FOUND_EXCEPTION} from "../../common/constants/error";
 
 @Controller('api/v1/games')
 export class GameApiController {
@@ -18,6 +31,7 @@ export class GameApiController {
     }
 
     @Get()
+    @HttpCode(200)
     @ApiTags('Game')
     @ApiOperation({
         description: 'This Api Gets all the available games'
@@ -37,15 +51,17 @@ export class GameApiController {
     @ApiOperation({
         description: 'This Api takes the id of the game and returns the game details'
     })
-    @ApiNoContentResponse({
-        description : 'No Game with given id exists'
+    @ApiNotFoundResponse({
+        description: 'No Game with given id exists',
     })
     @ApiOkResponse({
         status: 200,
         type: GameResponseDto,
     })
     async getGameById(@Param('id')id: string): Promise<GameResponseDto> {
-        return await this.gameService.getGame(id);
+        const game: GameResponseDto = await this.gameService.getGame(id);
+        if (!game) throw new NotFoundException(NOT_FOUND_EXCEPTION);
+        return game;
     }
 
     @Post()
@@ -62,27 +78,30 @@ export class GameApiController {
     @ApiBadRequestResponse({
         description: 'Please provide the correct data(request body) for game'
     })
-    async addGame(@Body()game: GameRequestDto) {
+    async addGame(@Body()game: GameRequestDto): Promise<void> {
         await this.gameService.addGame(game);
     }
 
     @Delete(':id')
+    @HttpCode(204)
     @ApiTags('Game')
     @ApiOperation({
         description: 'This Api takes the id of the game and deletes it from the store',
     })
     @ApiBadRequestResponse({
-        description: 'Please provide the correct id xx  for game'
+        description: 'Please provide the correct id for game'
     })
     @ApiNoContentResponse({
         description: 'The Game has been deleted successfully',
     })
-    async deleteGame(@Param('id')id: string) {
-        return await this.gameService.deleteGameById(id);
+    async deleteGame(@Param('id')id: string): Promise<void> {
+        const gameDeleted: boolean = await this.gameService.deleteGameById(id);
+        if (!gameDeleted) throw new NotFoundException(NOT_FOUND_EXCEPTION)
     }
 
 
     @Put(':id')
+    @HttpCode(204)
     @ApiTags('Game')
     @ApiOperation({
         description: 'This Api takes the id of the game along with the game details and updates the old game data',
@@ -93,9 +112,10 @@ export class GameApiController {
     @ApiNoContentResponse({
         description: 'The Game has been updated successfully',
     })
-    async updateGame(@Param('id')id: string, @Body()gameRequestDto : GameRequestDto){
-        return await this.gameService.updateGame(id, gameRequestDto);
+    async updateGame(@Param('id')id: string, @Body()gameRequestDto: GameRequestDto): Promise<void> {
+        const gameUpdated: boolean = await this.gameService.updateGame(id, gameRequestDto);
+        if (!gameUpdated) {
+            throw new BadRequestException(BAD_REQUEST_GENERIC_EXCEPTION);
+        }
     }
-
-
 }
