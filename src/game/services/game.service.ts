@@ -1,4 +1,4 @@
-import {Injectable} from '@nestjs/common';
+import {Inject, Injectable} from '@nestjs/common';
 import {Game} from '../entities/game.entity';
 import {GameRequestDto, GameResponseDto} from '../dtos/game.dto';
 import {GameMapper} from '../mappers/game.mapper';
@@ -6,11 +6,12 @@ import {GameBo} from "../bos/game.bo";
 import {generateGameId} from "../utils/game-id.util";
 import {GameMongoRepository} from "../repository/gameMongoRepository";
 import {GameTestDto} from "../dtos/game-test.dto";
+import {GameRepository} from "../repository/game.repository";
 
 @Injectable()
 export class GameService {
 
-    constructor(private gameMapper: GameMapper, private  gameRepository: GameMongoRepository) {
+    constructor(private gameMapper: GameMapper,  @Inject(GameMongoRepository)private gameRepository: GameRepository) {
     }
 
     async getAllGames(): Promise<GameResponseDto[]> {

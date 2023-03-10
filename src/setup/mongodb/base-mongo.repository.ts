@@ -8,7 +8,7 @@ export abstract class BaseMongoRepository<T extends BaseEntity> {
     protected constructor(private mongodbClient: MongodbClient) {
     }
 
-    async getCollection<T>(): Promise<Collection<T>> {
+    async getCollection<T extends BaseEntity>(): Promise<Collection<T>> {
         const dbClient = await this.mongodbClient.get();
         return dbClient.db(this.dbName()).collection(this.tableName());
     }
@@ -18,7 +18,6 @@ export abstract class BaseMongoRepository<T extends BaseEntity> {
         entity.createdAt = currentDate;
         entity.modifiedAt = currentDate;
         const collection = await this.getCollection();
-        //@ts-ignore
         await collection.insertOne(entity);
     }
 

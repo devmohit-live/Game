@@ -24,6 +24,7 @@ export class CommonsModule implements OnApplicationBootstrap {
 
     async onApplicationBootstrap(): Promise<any> {
         await this.mongodbClient.get();
+
     }
 
 }
