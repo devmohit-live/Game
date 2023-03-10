@@ -23,8 +23,8 @@ export class CommonsModule implements OnApplicationBootstrap {
     }
 
     async onApplicationBootstrap(): Promise<any> {
+        console.log('Verifying Clients')
         await this.mongodbClient.get();
-
     }
 
 }

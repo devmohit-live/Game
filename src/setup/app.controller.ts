@@ -20,6 +20,7 @@ export class AppController {
         description: 'Server crashed'
     })
     getHello(): string {
+        console.log('Healtcheck is called')
         return this.appService.getHello();
     }
 }
