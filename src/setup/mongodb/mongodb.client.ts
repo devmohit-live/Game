@@ -16,7 +16,6 @@ export class MongodbClient {
         if (this._client) {
             return this._client;
         }
-        console.log('Mongo Db connection string is ',this._clusterEndpoint)
         const mongoClient = new MongoClient(`mongodb+srv://${this._clusterEndpoint}`);
 
         this._client = await mongoClient.connect();

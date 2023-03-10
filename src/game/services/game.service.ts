@@ -11,7 +11,7 @@ import {GameRepository} from "../repository/game.repository";
 @Injectable()
 export class GameService {
 
-    constructor(private gameMapper: GameMapper,  @Inject(GameMongoRepository)private gameRepository: GameRepository) {
+    constructor(private gameMapper: GameMapper, @Inject(GameMongoRepository) private gameRepository: GameRepository) {
     }
 
     async getAllGames(): Promise<GameResponseDto[]> {
@@ -27,11 +27,12 @@ export class GameService {
         return this.gameMapper.mapGameBoToGameResponseDto(this.gameMapper.mapGameToGameBo(game));
     }
 
-    async addGame(game: GameRequestDto) {
+    async addGame(game: GameRequestDto): Promise<string> {
         const gameBo = new GameBo(generateGameId());
         this.gameMapper.mapGameRequestDtoToGameBo(game, gameBo);
         const gameEntity: Game = this.gameMapper.mapGameRequestBoToGame(gameBo);
         await this.gameRepository.addGame(gameEntity);
+        return gameBo.id;
     }
 
     async deleteGameById(id: string): Promise<boolean> {

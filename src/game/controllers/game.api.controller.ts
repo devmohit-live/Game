@@ -8,7 +8,7 @@ import {
     NotFoundException,
     Param,
     Post,
-    Put
+    Put,
 } from '@nestjs/common';
 import {GameService} from '../services/game.service';
 import {GameRequestDto, GameResponseDto} from '../dtos/game.dto';
@@ -23,6 +23,7 @@ import {
     ApiTags
 } from "@nestjs/swagger";
 import {BAD_REQUEST_GENERIC_EXCEPTION, NOT_FOUND_EXCEPTION} from "../../common/constants/error";
+
 
 @Controller('api/v1/games')
 export class GameApiController {
@@ -65,9 +66,10 @@ export class GameApiController {
     }
 
     @Post()
+    @HttpCode(201)
     @ApiTags('Game')
     @ApiOperation({
-        description: 'This Api creates a new game with the provided details'
+        description: 'This Api creates a new game with the provided details and returns the id of the created resource'
     })
     @ApiBody({
         description: 'Takes Name of the Game, Author name, Date of publish and URL of the game for game creation',
@@ -78,8 +80,9 @@ export class GameApiController {
     @ApiBadRequestResponse({
         description: 'Please provide the correct data(request body) for game'
     })
-    async addGame(@Body()game: GameRequestDto): Promise<void> {
-        await this.gameService.addGame(game);
+    async addGame(@Body()game: GameRequestDto): Promise<string> {
+        const createdResourceId: string = await this.gameService.addGame(game);
+        return createdResourceId;
     }
 
     @Delete(':id')
